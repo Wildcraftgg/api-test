@@ -1,11 +1,15 @@
+const express = require('express');
 const axios = require('axios');
-const express = require("express")
-const app = express();
 
+const app = express();
 const PORT = process.env.PORT || 3000;
-app.get('/getData',async(req,res) => {
+
+// API endpoint to fetch asset data
+app.get('/api/asset/:id', async (req, res) => {
+  const assetId = req.params.id; // Get the asset ID from the URL parameter
+
   try {
-    const response = await axios.get('https://assetdelivery.roblox.com/v2/asset/?id=307181070', {
+    const response = await axios.get(`https://assetdelivery.roblox.com/v2/asset/?id=${assetId}`, {
       headers: {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-encoding': 'gzip, deflate, br, zstd',
@@ -23,18 +27,15 @@ app.get('/getData',async(req,res) => {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
       }
     });
-    res.json({
-        status: 'success',
-        data: response.data
-    })
-  } catch (error) {
-    res.status(500).json({
-        status: 'error',
-        message: 'Error: '+error
-    })
-  }
-})
 
+    res.json(response.data); // Send the fetched data as JSON
+  } catch (error) {
+    console.error('Error fetching asset:', error);
+    res.status(500).json({ error: 'Failed to fetch asset' }); // Handle errors
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
- console.log('Server running');
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

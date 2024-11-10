@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize the counter value
-let counter = 1000; // Starting value for the global counter
+let counter = 1000000; // Starting value for the global counter
 
 // Route to get the current counter value
 app.get("/getCounter", (req, res) => {
